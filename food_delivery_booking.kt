@@ -22,8 +22,8 @@ class FoodDeliveryBooking(n: Int) {
     private var totalBookings = 0
 
     init {
-        for (i in 0 until n) {
-            val deliveryExecutive = DeliveryExecutive(name = "DE" + (i + 1))
+        repeat(n) {
+            val deliveryExecutive = DeliveryExecutive(name = "DE" + (it + 1))
             deliveryExecutives.add(deliveryExecutive)
         }
     }
@@ -38,8 +38,8 @@ class FoodDeliveryBooking(n: Int) {
             var previousPickUpTime = -1L
 
             for (booking in deliveryExecutive.bookings) {
-                if (booking.restaurant === restaurant
-                    && booking.destination === destination
+                if (booking.restaurant == restaurant
+                    && booking.destination == destination
                     && orderTimeInMillis <= booking.pickUpTimeInMillis
                 ) {
                     extraOrder++
@@ -61,10 +61,8 @@ class FoodDeliveryBooking(n: Int) {
             }
         }
 
-//        for (deliveryExecutive in deliveryExecutives) minDeliveryCharge =
-//            min(minDeliveryCharge, deliveryExecutive.deliveryCharge)
-
         val minDeliveryCharge = deliveryExecutives.minBy { it.deliveryCharge }.deliveryCharge
+        println("Min is $minDeliveryCharge")
 
         for (deliveryExecutive in deliveryExecutives) {
             if (deliveryExecutive.deliveryCharge == minDeliveryCharge) {
@@ -120,22 +118,27 @@ class FoodDeliveryBooking(n: Int) {
 }
 
 fun main() {
-    val foodDeliveryBooking = FoodDeliveryBooking(2)
+    val foodDeliveryBooking = FoodDeliveryBooking(5)
+
+//    foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "10:01 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(4, "B", "A", "10:02 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(5, "B", "A", "10:03 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(6, "B", "A", "10:04 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(7, "B", "A", "10:05 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(8, "B", "A", "10:06 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(9, "B", "A", "10:07 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(10, "B", "A", "10:08 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(10, "B", "A", "10:09 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(11, "B", "A", "10:10 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(12, "B", "A", "10:12 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(13, "B", "A", "10:13 AM")
 
     foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
     foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
     foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "10:01 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(4, "B", "A", "10:02 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(5, "B", "A", "10:03 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(6, "B", "A", "10:04 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(7, "B", "A", "10:05 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(8, "B", "A", "10:06 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(9, "B", "A", "10:07 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(10, "B", "A", "10:08 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(10, "B", "A", "10:09 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(11, "B", "A", "10:10 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(12, "B", "A", "10:12 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(13, "B", "A", "10:13 AM")
+    foodDeliveryBooking.assignDeliveryExecutive(4, "D", "C", "10:35 AM")
 
     foodDeliveryBooking.displayActivity("DE1")
 
