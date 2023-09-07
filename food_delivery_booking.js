@@ -1,26 +1,25 @@
-const DeliveryExecutive = {
-    name: "",
-    orders: 0,
-    deliveryCharge: 0,
-    allowance: 0
-}
-
 const Booking = {
     bookingId: 0,
     customerId: 0,
     restaurant: '',
-    destination: ''
+    destination: '',
+    time: 0,
+}
+
+const DeliveryExecutive = {
+    name: "",
+    orders: 0,
+    deliveryCharge: 0,
+    allowance: 0,
+    bookings: []
 }
 
 class FoodDeliveryBooking {
     deliveryExecutives = []
-    bookings = []
 
     constructor(n) {
-        let i;
-
-        for (i = 0; i < n; i++) {
-            let deliveryExecutive = DeliveryExecutive
+        for (let i = 0; i < n; i++) {
+            let deliveryExecutive = {...DeliveryExecutive}
 
             deliveryExecutive.name = "DE" + (i + 1)
 
@@ -28,48 +27,62 @@ class FoodDeliveryBooking {
         }
     }
 
-    addBooking(customerId, restaurant, destination, time) {
+    addBooking(bookingId, customerId, restaurant, destination, time) {
         let booking = Booking
 
-        booking.bookingId = this.bookings.length + 1
+        booking.bookingId = bookingId
         booking.customerId = customerId
         booking.restaurant = restaurant
         booking.destination = destination
-
-        let date = Date.parse(time)
-        console.log(date)
         booking.time = time
 
-        this.bookings.push(booking)
+        return booking
     }
 
-    assignDeliveryExecutive() {
-        let i, minDeliveryCharge = Number.MAX_VALUE;
+    assignDeliveryExecutive(customerId, restaurant, destination, time) {
+        let minDeliveryCharge = Number.MAX_VALUE, deliveryExecutive
+        let timeInMillis = Date.parse(`1970-01-01 ${time}`)
 
-        for (i = 0; i < this.deliveryExecutives.size(); i++) {
-            minDeliveryCharge = Math.min(minDeliveryCharge, (this.deliveryExecutives)[i].deliveryCharge);
+        for (deliveryExecutive of this.deliveryExecutives) {
+            for (let booking of deliveryExecutive.bookings) {
+                if (booking.restaurant === restaurant
+                    && booking.destination === destination
+                    && timeInMillis - booking.time <= 15 * 60 * 1000
+                ) {
+                    deliveryExecutive.orders += 1
+                    deliveryExecutive.deliveryCharge += 5
+                    return
+                }
+            }
         }
 
-        for (i = 0; i < this.deliveryExecutives.size(); i++) {
-            if ((this.deliveryExecutives)[i].deliveryCharge === minDeliveryCharge)
-                break;
+        for (deliveryExecutive of this.deliveryExecutives)
+            minDeliveryCharge = Math.min(minDeliveryCharge, deliveryExecutive.deliveryCharge)
+
+        for (deliveryExecutive of this.deliveryExecutives) {
+            if (deliveryExecutive.deliveryCharge === minDeliveryCharge) {
+                deliveryExecutive.allowance += 10
+                deliveryExecutive.orders += 1
+                deliveryExecutive.deliveryCharge += 50
+
+                let bookingId = deliveryExecutive.bookings.length + 1
+                deliveryExecutive.bookings.push(this.addBooking(bookingId, customerId, restaurant, destination, timeInMillis))
+                return
+            }
         }
-
-        if (2 > 1) {
-            (this.deliveryExecutives)[i].deliveryCharge += 50;
-            (this.deliveryExecutives)[i].allowance += 10;
-
-        } else (this.deliveryExecutives)[i].deliveryCharge += 5;
-
-        (this.deliveryExecutives)[i].orders += 1;
     }
 
-    deliveryActivity() {
-
+    deliveryActivity(name) {
+        for (let deliveryExecutive of this.deliveryExecutives) {
+            if (deliveryExecutive.name === name) {
+                console.log(deliveryExecutive)
+                return
+            }
+        }
     }
 }
 
 console.log("JS Program started")
 let foodDeliveryBooking = new FoodDeliveryBooking(5)
-foodDeliveryBooking.addBooking(1, 'A', 'D', "9:00 AM")
-console.log(foodDeliveryBooking.deliveryExecutives.length)
+// foodDeliveryBooking.assignDeliveryExecutive(1, 'A', 'D', "9:00 AM")
+console.log(foodDeliveryBooking.deliveryExecutives)
