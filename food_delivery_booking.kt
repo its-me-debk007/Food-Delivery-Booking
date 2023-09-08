@@ -1,5 +1,4 @@
 import java.text.SimpleDateFormat
-import java.util.*
 
 data class Booking(
     val bookingId: Int = 0,
@@ -31,7 +30,13 @@ class FoodDeliveryBooking(n: Int) {
     }
 
     fun assignDeliveryExecutive(customerId: Int, restaurant: String, destination: String, orderTime: String) {
-        val sdf = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
+        val colonIdx = orderTime.indexOf(':')
+        if (orderTime.substring(0, colonIdx).toInt() > 12 || orderTime.substring(0, colonIdx).toInt() <= 0) {
+            println("Error: Wrong time format!")
+            return
+        }
+
+        val sdf = SimpleDateFormat("hh:mm a")
         var orderTimeInMillis = sdf.parse(orderTime).time + extraDays * 24 * 60 * 60 * 1000
 
         for (deliveryExecutive in deliveryExecutives) {
@@ -132,38 +137,11 @@ class FoodDeliveryBooking(n: Int) {
 fun main() {
     val foodDeliveryBooking = FoodDeliveryBooking(2)
 
-//    foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "10:01 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(4, "B", "A", "10:02 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(5, "B", "A", "10:03 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(6, "B", "A", "10:04 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(7, "B", "A", "10:05 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(8, "B", "A", "10:06 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(9, "B", "A", "10:07 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(10, "B", "A", "10:08 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(10, "B", "A", "10:09 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(11, "B", "A", "10:10 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(12, "B", "A", "10:12 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(13, "B", "A", "10:13 AM")
-
     foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
     foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
     foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "09:55 AM")
     foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "09:57 AM")
     foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "09:56 AM")
-//    foodDeliveryBooking.assignDeliveryExecutive(4, "D", "C", "10:35 AM")
 
-    foodDeliveryBooking.displayActivity("DE2")
-
-//    for (deliveryExecutive in foodDeliveryBooking.deliveryExecutives) {
-//        println(deliveryExecutive.name)
-//        println(deliveryExecutive.allowance)
-//        println(deliveryExecutive.deliveryCharge)
-//
-//        deliveryExecutive.bookings.forEach {
-//            println(it)
-//        }
-//        println('\n')
-//    }
+    foodDeliveryBooking.displayActivity("DE1")
 }
