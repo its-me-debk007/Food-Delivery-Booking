@@ -59,6 +59,8 @@ class FoodDeliveryBooking {
                 }
             }
 
+            console.log(`Extra Order is ${extraOrder}`)
+
             if (extraOrder >= 1 && extraOrder < 5) {
                 let bookingId = ++this.totalBookings
                 this.showSummary(bookingId, deliveryExecutive.name)
@@ -73,7 +75,7 @@ class FoodDeliveryBooking {
             }
 
             let minDeliveryCharge = this.deliveryExecutives.reduce((min, obj) => Math.min(min, obj.deliveryCharge), Number.MAX_VALUE)
-            console.log(`Min is ${minDeliveryCharge}`)
+            // console.log(`Min is ${minDeliveryCharge}`)
 
             for (let deliveryExecutive of this.deliveryExecutives) {
                 if (deliveryExecutive.deliveryCharge === minDeliveryCharge) {
@@ -117,7 +119,7 @@ class FoodDeliveryBooking {
 
 let foodDeliveryBooking = new FoodDeliveryBooking(5)
 
-console.log(foodDeliveryBooking.deliveryExecutives)
+// console.log(foodDeliveryBooking.deliveryExecutives)
 
 // foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
 // foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
@@ -136,8 +138,8 @@ console.log(foodDeliveryBooking.deliveryExecutives)
 
 foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
 foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
-foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "10:01 AM")
-foodDeliveryBooking.assignDeliveryExecutive(4, "D", "C", "10:35 AM")
+// foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "10:01 AM")
+// foodDeliveryBooking.assignDeliveryExecutive(4, "D", "C", "10:35 AM")
+console.log(foodDeliveryBooking.deliveryExecutives)
 
-
-foodDeliveryBooking.displayActivity("DE1")
+// foodDeliveryBooking.displayActivity("DE1")

@@ -20,6 +20,8 @@ data class DeliveryExecutive(
 class FoodDeliveryBooking(n: Int) {
     private val deliveryExecutives = mutableListOf<DeliveryExecutive>()
     private var totalBookings = 0
+    private var latestTimeInMillis: Long = 0
+    private var extraDays = 0
 
     init {
         repeat(n) {
@@ -30,9 +32,15 @@ class FoodDeliveryBooking(n: Int) {
 
     fun assignDeliveryExecutive(customerId: Int, restaurant: String, destination: String, orderTime: String) {
         val sdf = SimpleDateFormat("hh:mm a", Locale.ENGLISH)
-        val orderTimeInMillis = sdf.parse(orderTime).time
+        var orderTimeInMillis = sdf.parse(orderTime).time + extraDays * 24 * 60 * 60 * 1000
 
         for (deliveryExecutive in deliveryExecutives) {
+
+            if (orderTimeInMillis < latestTimeInMillis) {
+                orderTimeInMillis += 24 * 60 * 60 * 1000
+                extraDays++
+                break
+            }
 
             var extraOrder = 0
             var previousPickUpTime = -1L
@@ -57,12 +65,14 @@ class FoodDeliveryBooking(n: Int) {
                 deliveryExecutive.bookings.add(
                     addBooking(bookingId, customerId, restaurant, destination, orderTimeInMillis, previousPickUpTime)
                 )
+
+                latestTimeInMillis = orderTimeInMillis
+                extraDays++
                 return
             }
         }
 
         val minDeliveryCharge = deliveryExecutives.minBy { it.deliveryCharge }.deliveryCharge
-        println("Min is $minDeliveryCharge")
 
         for (deliveryExecutive in deliveryExecutives) {
             if (deliveryExecutive.deliveryCharge == minDeliveryCharge) {
@@ -75,6 +85,8 @@ class FoodDeliveryBooking(n: Int) {
                 deliveryExecutive.bookings.add(
                     addBooking(bookingId, customerId, restaurant, destination, orderTimeInMillis)
                 )
+
+                latestTimeInMillis = orderTimeInMillis
                 return
             }
         }
@@ -118,7 +130,7 @@ class FoodDeliveryBooking(n: Int) {
 }
 
 fun main() {
-    val foodDeliveryBooking = FoodDeliveryBooking(5)
+    val foodDeliveryBooking = FoodDeliveryBooking(2)
 
 //    foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
 //    foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
@@ -137,10 +149,12 @@ fun main() {
 
     foodDeliveryBooking.assignDeliveryExecutive(1, "A", "D", "9:00 AM")
     foodDeliveryBooking.assignDeliveryExecutive(2, "B", "A", "10:00 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "10:01 AM")
-    foodDeliveryBooking.assignDeliveryExecutive(4, "D", "C", "10:35 AM")
+    foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "09:55 AM")
+    foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "09:57 AM")
+    foodDeliveryBooking.assignDeliveryExecutive(3, "B", "A", "09:56 AM")
+//    foodDeliveryBooking.assignDeliveryExecutive(4, "D", "C", "10:35 AM")
 
-    foodDeliveryBooking.displayActivity("DE1")
+    foodDeliveryBooking.displayActivity("DE2")
 
 //    for (deliveryExecutive in foodDeliveryBooking.deliveryExecutives) {
 //        println(deliveryExecutive.name)
